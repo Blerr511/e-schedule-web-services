@@ -1,26 +1,18 @@
-import { HttpError } from 'errors';
-import { RequestHandler } from 'express';
-import { validationResult } from 'express-validator';
-import { MetaItem } from 'interfaces/ResponseBody.interface';
+import {HttpError} from '@errors/HttpError';
+import {MetaItem} from '@typeDefs/api.types';
+import {RequestHandler} from 'express';
+import {validationResult} from 'express-validator';
 
 export const validationResultMiddleware: RequestHandler = (req, res, next) => {
-    const result = validationResult.withDefaults({
-        formatter: (err): MetaItem => {
-            console.log(err)
-            return {
-                type: 'error',
-                text: err.msg,
-            };
-        },
-    })(req);
+	const result = validationResult.withDefaults({
+		formatter: (err): MetaItem => {
+			return {
+				type: 'error',
+				message: err.msg
+			};
+		}
+	})(req);
 
-    if (result.isEmpty()) next();
-    else
-        next(
-            new HttpError(
-                result.array({ onlyFirstError: true })[0].text,
-                400,
-                result.mapped()
-            )
-        );
+	if (result.isEmpty()) next();
+	else next(new HttpError(result.array({onlyFirstError: true})[0].message, 400, result.mapped()));
 };
