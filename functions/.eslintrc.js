@@ -23,14 +23,12 @@ module.exports = {
 	],
 	plugins: ['prettier', '@typescript-eslint', 'import'],
 	rules: {
-		quotes: ['error']
+		quotes: ['error'],
+		'new-cap': 'off'
 	},
 	settings: {
 		'import/resolver': {
-			node: {
-				moduleDirectory: ['node_modules', 'src/'],
-				extensions: ['.js', '.jsx', '.ts', '.tsx']
-			}
+			typescript: {}
 		}
 	}
 };

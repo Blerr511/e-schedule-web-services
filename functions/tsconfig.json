@@ -7,7 +7,14 @@
 		"sourceMap": true,
 		"strict": true,
 		"moduleResolution": "node",
-		"baseUrl": "./src",
+		"baseUrl": "src",
+		"paths": {
+			"@routes": ["routes"],
+			"@controllers": ["controllers"],
+			"@helpers": ["helpers"],
+			"@config": ["config"],
+			"@services": ["services"]
+		},
 		"target": "es2017"
 	},
 	"compileOnSave": true,
