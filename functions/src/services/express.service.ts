@@ -1,10 +1,8 @@
 import * as express from 'express';
+import mainRouter from '@routes';
 
 const app = express();
 
-app.get('/', (req, res, next) => {
-	res.send('Hello world');
-	next();
-});
+app.use(mainRouter);
 
 export default app;
