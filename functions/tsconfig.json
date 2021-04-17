@@ -9,14 +9,27 @@
 		"moduleResolution": "node",
 		"baseUrl": "src",
 		"paths": {
+			"@routes/*": ["routes/*"],
+			"@controllers/*": ["controllers/*"],
+			"@helpers/*": ["helpers/*"],
+			"@config/*": ["config/*"],
+			"@services/*": ["services/*"],
+			"@typeDefs/*": ["typeDefs/*"],
+			"@middlewares/*": ["middlewares/*"],
+			"@errors/*": ["errors/*"],
+
 			"@routes": ["routes"],
 			"@controllers": ["controllers"],
 			"@helpers": ["helpers"],
 			"@config": ["config"],
-			"@services": ["services"]
+			"@services": ["services"],
+			"@typeDefs": ["typeDefs"],
+			"@errors": ["errors"]
 		},
+		"typeRoots": ["../node_modules/@types", "../typeDefs"],
 		"target": "es2017"
 	},
 	"compileOnSave": true,
-	"include": ["src"]
+	"include": ["src"],
+	"files": ["src/typeDefs/index.d.ts"]
 }

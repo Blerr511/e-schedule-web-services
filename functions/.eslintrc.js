@@ -24,7 +24,8 @@ module.exports = {
 	plugins: ['prettier', '@typescript-eslint', 'import'],
 	rules: {
 		quotes: ['error'],
-		'new-cap': 'off'
+		'new-cap': 'off',
+		'require-jsdoc': 'off'
 	},
 	settings: {
 		'import/resolver': {
