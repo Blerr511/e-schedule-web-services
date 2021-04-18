@@ -32,7 +32,7 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 		const $lecturers = db.ref('lecturers');
 
 		await $lecturers.update({
-			uid: {uid}
+			[uid]: {uid}
 		});
 
 		res.send({status: 'ok', message: 'Lecturer success created', data});
