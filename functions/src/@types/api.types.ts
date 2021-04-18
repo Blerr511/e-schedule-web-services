@@ -13,5 +13,12 @@ export interface DefaultResponse<D = unknown, M extends string = string> {
 	message: string;
 	data?: D;
 	meta?: Meta<M>;
+}
+
+export interface ErrorResponse extends Omit<DefaultResponse, 'data'> {
 	code?: FunctionsErrorCode;
 }
+
+type PD = import('express-serve-static-core').ParamsDictionary;
+
+export type ParamsDictionary<P = undefined> = PD & P;

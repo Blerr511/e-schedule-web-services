@@ -1,7 +1,7 @@
-// import {HttpError} from '@errors/HttpError';
+import {HttpError} from '@errors/HttpError';
+import {Meta} from '@types';
 import {RequestHandler} from 'express';
 import {validationResult} from 'express-validator';
-import {logger} from 'firebase-functions';
 
 export const validationResultMiddleware: RequestHandler = (req, res, next) => {
 	const result = validationResult.withDefaults({
@@ -12,9 +12,14 @@ export const validationResultMiddleware: RequestHandler = (req, res, next) => {
 			};
 		}
 	})(req);
-	logger.log('valRest', result);
-	logger.log('mapped', result.mapped());
-	logger.log('array', result.array());
+
 	if (result.isEmpty()) next();
-	// else next(new HttpError(result.array({onlyFirstError: true})[0].message, 400, result.mapped()));
+	else
+		next(
+			new HttpError(
+				'invalid-argument',
+				result.array({onlyFirstError: true})[0].message,
+				result.mapped() as Meta
+			)
+		);
 };

@@ -30,8 +30,8 @@ module.exports = {
 	settings: {
 		'import/resolver': {
 			node: {
-				moduleDirectory: ['node_modules', 'src/'],
-				extensions: ['.js', '.jsx', '.ts', '.tsx']
+				moduleDirectory: ['node_modules/', 'src/'],
+				extensions: ['.js', '.ts']
 			},
 			typescript: {}
 		}

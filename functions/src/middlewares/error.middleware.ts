@@ -1,8 +1,8 @@
 import {HttpError} from '@errors/HttpError';
-import {DefaultResponse} from '@types';
+import {ErrorResponse} from '@types';
 import {ErrorRequestHandler, NextFunction, Request, Response} from 'express';
 
-const errorMiddleware: ErrorRequestHandler<never, DefaultResponse> = (
+const errorMiddleware: ErrorRequestHandler<never, ErrorResponse> = (
 	error: HttpError,
 	req: Request,
 	res: Response,
@@ -12,7 +12,7 @@ const errorMiddleware: ErrorRequestHandler<never, DefaultResponse> = (
 		const status: number = error.httpErrorCode.status || 400;
 		const message: string = error.message || 'Something went wrong';
 
-		const response: DefaultResponse = {
+		const response: ErrorResponse = {
 			status: 'error',
 			message,
 			meta: error.meta,
