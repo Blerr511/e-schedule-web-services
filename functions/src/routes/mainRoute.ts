@@ -1,10 +1,10 @@
-// import authMiddleware from '@middlewares/auth.middleware';
+import authMiddleware from '@middlewares/auth.middleware';
 import {Router} from 'express';
 import {usersRouter} from './users';
 
 const mainRouter = Router();
 
-// mainRouter.use(authMiddleware);
+mainRouter.use(authMiddleware);
 
 mainRouter.use('/users', usersRouter);
 
