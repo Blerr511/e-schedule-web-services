@@ -1,11 +1,11 @@
-import {createLecturer} from './createLecturer';
-import {setUserSettings} from './setUserSettings';
+import * as admins from './admins';
+import * as students from './students';
 
 const usersController = {
-	createLecturer,
-	setUserSettings
+	admins,
+	students
 };
 
-export {createLecturer, setUserSettings};
+export {admins, students};
 
 export default usersController;

@@ -41,7 +41,6 @@ export const createLecturer = [
 	body('email').isString().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
 	body('name').notEmpty().isString().withMessage('Name is required'),
 	body('surname').notEmpty().isString().withMessage('Surname is required'),
-	withRoles('admin'),
 	validationResultMiddleware,
 	handleCreateLecturer
 ];

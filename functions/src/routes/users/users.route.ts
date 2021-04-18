@@ -1,7 +1,8 @@
 import {Router} from 'express';
-import {createLecturer, setUserSettings} from '@controllers/users';
+import {adminsRoute} from './admins';
+import {studentsRoute} from './students';
 
 export const usersRouter = Router();
 
-usersRouter.post('/createLecturer', createLecturer);
-usersRouter.post('/setUserSettings', setUserSettings);
+usersRouter.use('/admin', adminsRoute);
+usersRouter.use('/student', studentsRoute);
