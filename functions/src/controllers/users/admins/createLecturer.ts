@@ -4,7 +4,6 @@ import {ROLES} from '@config/roles';
 import {RequestHandler} from 'express';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
-import {withRoles} from '@middlewares/role.middleware';
 
 export type CreateLecturerResponse = DefaultResponse;
 
@@ -29,6 +28,11 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 		await admin.auth().setCustomUserClaims(uid, {role: ROLES.lecturer});
 
 		const data = await admin.auth().getUser(uid);
+
+		const db = admin.database();
+		const $lecturers = db.ref('lecturers');
+
+		await $lecturers.push(uid);
 
 		res.send({status: 'ok', message: 'Lecturer success created', data});
 		next();
