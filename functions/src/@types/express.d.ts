@@ -1,4 +1,4 @@
-import {auth} from 'firebase-admin';
+import {auth} from 'firebase-admin/lib';
 
 declare global {
 	namespace Express {

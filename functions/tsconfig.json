@@ -14,7 +14,6 @@
 			"@helpers/*": ["helpers/*"],
 			"@config/*": ["config/*"],
 			"@services/*": ["services/*"],
-			"@typeDefs/*": ["typeDefs/*"],
 			"@middlewares/*": ["middlewares/*"],
 			"@errors/*": ["errors/*"],
 
@@ -23,13 +22,11 @@
 			"@helpers": ["helpers"],
 			"@config": ["config"],
 			"@services": ["services"],
-			"@typeDefs": ["typeDefs"],
 			"@errors": ["errors"]
 		},
-		"typeRoots": ["../node_modules/@types", "../typeDefs"],
+		"typeRoots": ["@types", "./node_modules/@types"],
 		"target": "es2017"
 	},
 	"compileOnSave": true,
-	"include": ["src"],
-	"files": ["src/typeDefs/index.d.ts"]
+	"include": ["src", "src/@types"]
 }
