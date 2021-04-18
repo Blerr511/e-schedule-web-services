@@ -1,5 +1,5 @@
 import {HttpError} from '@errors/HttpError';
-import {MetaItem} from '@typeDefs/api.types';
+import {MetaItem} from '@types';
 import {RequestHandler} from 'express';
 import {validationResult} from 'express-validator';
 

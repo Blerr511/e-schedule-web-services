@@ -1,5 +1,5 @@
 import {HttpError} from '@errors/HttpError';
-import {DefaultResponse} from '@typeDefs/api.types';
+import {DefaultResponse} from '@types';
 import {ErrorRequestHandler, NextFunction, Request, Response} from 'express';
 
 const errorMiddleware: ErrorRequestHandler<never, DefaultResponse> = (

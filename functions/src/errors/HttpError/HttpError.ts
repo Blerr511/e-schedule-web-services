@@ -1,4 +1,4 @@
-import {Meta} from '@typeDefs/api.types';
+import {Meta} from '@types';
 
 export class HttpError extends Error {
 	code = 400;

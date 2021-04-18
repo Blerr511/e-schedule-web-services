@@ -1,8 +1,15 @@
+import {config} from 'dotenv';
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 import {app} from './services';
 
-admin.initializeApp();
+config();
+functions.logger.log('dbdddddddddddd', process.env.DB_URL, {hellow: 'world'});
+
+admin.initializeApp({
+	databaseURL: process.env.DB_URL,
+	projectId: 'eshedule'
+});
 
 export const api = functions.https.onRequest(app);
 

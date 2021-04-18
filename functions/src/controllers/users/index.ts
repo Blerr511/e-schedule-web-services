@@ -1,9 +1,11 @@
 import {createLecturer} from './createLecturer';
+import {setUserSettings} from './setUserSettings';
 
 const usersController = {
-	createLecturer
+	createLecturer,
+	setUserSettings
 };
 
-export {createLecturer};
+export {createLecturer, setUserSettings};
 
 export default usersController;

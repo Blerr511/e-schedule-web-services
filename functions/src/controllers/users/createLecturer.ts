@@ -1,5 +1,5 @@
 import * as admin from 'firebase-admin';
-import {DefaultResponse} from '@typeDefs';
+import {DefaultResponse} from '@types';
 import {ROLES} from '@config/roles';
 import {RequestHandler} from 'express';
 import {body} from 'express-validator';
