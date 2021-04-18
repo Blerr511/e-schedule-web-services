@@ -4,6 +4,7 @@ import {ROLES} from '@config/roles';
 import {RequestHandler} from 'express';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {withRoles} from '@middlewares/role.middleware';
 
 export type CreateLecturerResponse = DefaultResponse;
 
@@ -40,6 +41,7 @@ export const createLecturer = [
 	body('email').isString().withMessage('Email is required').isEmail().withMessage('Invalid email format'),
 	body('name').notEmpty().isString().withMessage('Name is required'),
 	body('surname').notEmpty().isString().withMessage('Surname is required'),
+	withRoles('admin'),
 	validationResultMiddleware,
 	handleCreateLecturer
 ];

@@ -1,13 +1,9 @@
 import {HttpError} from '@errors/HttpError';
 import {DefaultResponse, UserSettings} from '@types';
 import {RequestHandler} from 'express';
-import {body} from 'express-validator';
 import * as admin from 'firebase-admin';
 
-export interface SetUserSettingsBody {
-	userId: string;
-	settings: UserSettings;
-}
+export type SetUserSettingsBody = UserSettings;
 
 export type UserUserSettingsResponse = DefaultResponse;
 
@@ -17,7 +13,9 @@ const handleSetUserSettings: RequestHandler<never, UserUserSettingsResponse, Set
 	next
 ) => {
 	try {
-		const {settings, userId} = req.body;
+		const settings = req.body;
+		const userId = req.user?.uid;
+
 		const db = admin.database();
 
 		const $user = db.ref(`users/${userId}`);
@@ -39,4 +37,4 @@ const handleSetUserSettings: RequestHandler<never, UserUserSettingsResponse, Set
 	}
 };
 
-export const setUserSettings = [body('userId').isString(), handleSetUserSettings];
+export const setUserSettings = [handleSetUserSettings];

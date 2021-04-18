@@ -1,6 +1,6 @@
-export const student = 0 as const;
-export const lecturer = 1 as const;
-export const admin = 2 as const;
+export const student = 'student' as const;
+export const lecturer = 'lecturer' as const;
+export const admin = 'admin' as const;
 
 const ROLES = Object.freeze({
 	student,
