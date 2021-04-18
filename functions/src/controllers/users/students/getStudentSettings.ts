@@ -1,3 +1,4 @@
+import {HttpError} from '@errors/HttpError';
 import {DefaultResponse, StudentSettings} from '@types';
 import {RequestHandler} from 'express';
 import * as admin from 'firebase-admin';
@@ -11,10 +12,13 @@ const handleGetStudentSettings: RequestHandler<never, GetStudentSettingsResponse
 ) => {
 	try {
 		const userId = req.user?.uid;
+		if (!userId) throw new HttpError('invalid-argument', 'UserId not provided');
 
 		const db = admin.database();
 
-		const $settings = db.ref(`users/${userId}/settings`);
+		const $settings = db.ref(`students/${userId}/settings`);
+
+		$settings.child('uid').equalTo(userId);
 
 		const settings = await $settings.get();
 

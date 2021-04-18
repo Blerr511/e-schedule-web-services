@@ -9,14 +9,14 @@ const errorMiddleware: ErrorRequestHandler<never, DefaultResponse> = (
 	next: NextFunction
 ) => {
 	try {
-		const status: number = error.code || 500;
+		const status: number = error.httpErrorCode.status || 400;
 		const message: string = error.message || 'Something went wrong';
-		const meta = error.meta;
 
 		const response: DefaultResponse = {
 			status: 'error',
-			meta,
-			message
+			message,
+			meta: error.meta,
+			code: error.code
 		};
 
 		res.status(status).send(response);

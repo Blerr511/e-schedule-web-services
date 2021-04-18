@@ -4,19 +4,14 @@ import * as admin from 'firebase-admin';
 import {app} from './services';
 
 config();
-functions.logger.log('dbdddddddddddd', process.env.DB_URL, {hellow: 'world'});
 
-admin.initializeApp({
-	databaseURL: process.env.DB_URL,
-	projectId: 'eshedule'
-});
+const init = async (): Promise<void> => {
+	admin.initializeApp({
+		databaseURL: process.env.DB_URL,
+		projectId: 'eshedule'
+	});
+};
+
+init();
 
 export const api = functions.https.onRequest(app);
-
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });

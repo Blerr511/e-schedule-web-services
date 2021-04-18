@@ -4,6 +4,7 @@ import {ROLES} from '@config/roles';
 import {RequestHandler} from 'express';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {logger} from 'firebase-functions';
 
 export type CreateLecturerResponse = DefaultResponse;
 
@@ -21,9 +22,7 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 	try {
 		const {email, name, surname} = req.body;
 
-		const {uid} = await admin
-			.auth()
-			.createUser({email, displayName: `${name} ${surname}`, emailVerified: true});
+		const {uid} = await admin.auth().createUser({email, displayName: `${name} ${surname}`});
 
 		await admin.auth().setCustomUserClaims(uid, {role: ROLES.lecturer});
 
@@ -32,11 +31,14 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 		const db = admin.database();
 		const $lecturers = db.ref('lecturers');
 
-		await $lecturers.push(uid);
+		await $lecturers.update({
+			uid: {uid}
+		});
 
 		res.send({status: 'ok', message: 'Lecturer success created', data});
 		next();
 	} catch (error) {
+		logger.error('crlect err', error);
 		next(error);
 	}
 };

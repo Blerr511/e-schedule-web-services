@@ -1,11 +1,11 @@
 import * as admin from 'firebase-admin';
-import {HttpError} from '@errors';
 import {RequestHandler} from 'express';
+import {HttpError} from '@errors/HttpError';
 
 const authMiddleware: RequestHandler = async (req, res, next) => {
 	try {
 		if (!req.headers.authorization || !req.headers.authorization.split('Bearer ')[1]) {
-			throw new HttpError('Auth token is missing', 401);
+			throw new HttpError('unauthenticated', 'Auth token is missing');
 		}
 		const token = req.headers.authorization.split('Bearer ')[1];
 
