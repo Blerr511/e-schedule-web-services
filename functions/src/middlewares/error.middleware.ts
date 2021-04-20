@@ -9,7 +9,7 @@ const errorMiddleware: ErrorRequestHandler<never, ErrorResponse> = (
 	next: NextFunction
 ) => {
 	try {
-		const status: number = error.httpErrorCode.status || 400;
+		const status: number = error.httpErrorCode?.status || 400;
 		const message: string = error.message || 'Something went wrong';
 
 		const response: ErrorResponse = {
