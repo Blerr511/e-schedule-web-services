@@ -9,7 +9,7 @@ export type GetScheduleResponse = DefaultResponse<ISchedule[]>;
 
 const handleGetSchedule: RequestHandler<GetScheduleParams, GetScheduleResponse> = async (req, res, next) => {
 	try {
-		const {facultyId, groupId, id} = req.params;
+		const {facultyId, groupId} = req.params;
 
 		const db = admin.database();
 

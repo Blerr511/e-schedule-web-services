@@ -15,13 +15,14 @@ const handleGetLecturersList: RequestHandler<never, GetLecturerListResponse> = a
 
 		logger.info(lecturers.toJSON());
 
-		const data: UserRecord[] = [];
+		const ids: Array<{uid: string}> = [];
 
 		lecturers.forEach(lect => {
-			data.push(lect.toJSON() as UserRecord);
+			ids.push(lect.toJSON() as {uid: string});
 		});
 
-		logger.log(data, 'data');
+		const data: UserRecord[] = await Promise.all(ids.map(({uid}) => admin.auth().getUser(uid)));
+
 		res.send({status: 'ok', message: 'Success', data});
 
 		next();

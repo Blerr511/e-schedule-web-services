@@ -24,7 +24,7 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 
 		const {uid} = await admin.auth().createUser({email, displayName: `${name} ${surname}`});
 
-		await admin.auth().setCustomUserClaims(uid, {role: ROLES.lecturer});
+		await admin.auth().setCustomUserClaims(uid, {role: ROLES.lecturer, name, surname});
 
 		const data = await admin.auth().getUser(uid);
 
@@ -38,7 +38,6 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 		res.send({status: 'ok', message: 'Lecturer success created', data});
 		next();
 	} catch (error) {
-		logger.error('crlect err', error);
 		next(error);
 	}
 };
