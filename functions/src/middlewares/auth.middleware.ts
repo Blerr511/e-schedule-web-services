@@ -1,6 +1,7 @@
 import * as admin from 'firebase-admin';
 import {RequestHandler} from 'express';
 import {HttpError} from '@errors/HttpError';
+import {ROLES} from '@config/roles';
 
 const authMiddleware: RequestHandler = async (req, res, next) => {
 	try {
@@ -13,7 +14,11 @@ const authMiddleware: RequestHandler = async (req, res, next) => {
 
 		const user = await admin.auth().getUser(result.uid);
 
+		if (!user.customClaims?.role) admin.auth().setCustomUserClaims(user.uid, {role: ROLES.student});
+
 		req.user = user;
+
+		next();
 	} catch (error) {
 		next(error);
 	}
