@@ -18,14 +18,18 @@ const handleGetStudentSettings: RequestHandler<never, GetStudentSettingsResponse
 
 		const $settings = db.ref(`students/${userId}/settings`);
 
-		$settings.child('uid').equalTo(userId);
-
 		const settings = await $settings.get();
+
+		const defaultSettings: StudentSettings = {
+			group: null
+		};
+
+		if (!settings.exists()) $settings.set(defaultSettings);
 
 		res.send({
 			status: 'ok',
-			message: 'Settings success updated',
-			data: settings.toJSON() as StudentSettings
+			message: 'Success',
+			data: (settings.toJSON() as StudentSettings) || defaultSettings
 		});
 
 		next();

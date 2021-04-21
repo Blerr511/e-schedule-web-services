@@ -4,7 +4,6 @@ import {ROLES} from '@config/roles';
 import {RequestHandler} from 'express';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
-import {logger} from 'firebase-functions';
 
 export type CreateLecturerResponse = DefaultResponse;
 
