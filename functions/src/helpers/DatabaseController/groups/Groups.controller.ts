@@ -19,7 +19,7 @@ export class Groups implements DatabaseController<IGroupPayload, IGroup> {
 
 		const data: IGroup = {...group, id: uid};
 
-		await $group.set(group);
+		await $group.set(data);
 
 		return data;
 	}
