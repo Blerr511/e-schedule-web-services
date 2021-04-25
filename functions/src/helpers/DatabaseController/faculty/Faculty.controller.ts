@@ -43,9 +43,10 @@ export class Faculty implements DatabaseController<IFacultyPayload, IFaculty> {
 		const $faculty = this.db.ref(`faculty/${uid}`);
 		const faculty = await $faculty.get();
 		if (!faculty.exists()) throw new HttpError('not-found', `Faculty with id \`${uid}\` not found`);
-		$faculty.set(data);
+		$faculty.update(data);
 
 		const res = await $faculty.get();
+
 		return res.toJSON() as IFaculty;
 	}
 
