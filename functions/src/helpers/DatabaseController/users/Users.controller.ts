@@ -16,13 +16,13 @@ export class Users implements DatabaseController<IUser> {
 	}
 	public async updateById(uid: string, user: Partial<IUser>): Promise<unknown> {
 		const $users = this.db.ref(`users/${uid}`);
-		if ((await $users.get()).exists()) throw new HttpError('not-found', `User with id ${uid} not found`);
+		if (!(await $users.get()).exists()) throw new HttpError('not-found', `User with id ${uid} not found`);
 		return $users.update(user);
 	}
 	public async findById(uid: string): Promise<IUser> {
 		const $users = this.db.ref(`users/${uid}`);
 		const user = await $users.get();
-		if (user.exists()) throw new HttpError('not-found', `User with id ${uid} not found`);
+		if (!user.exists()) throw new HttpError('not-found', `User with id ${uid} not found`);
 		return user.toJSON() as IUser;
 	}
 	public async find(resolver: (data: IUser) => boolean): Promise<IUser[]> {

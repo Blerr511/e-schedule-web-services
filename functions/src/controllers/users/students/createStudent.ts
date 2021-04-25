@@ -20,7 +20,7 @@ const handleCreateStudent: RequestHandler<never, CreateStudentResponse, CreateSt
 
 		const db = new Database();
 
-		await db.users.create(uid, {uid, role: 'lecturer'});
+		await db.users.create(uid, {uid, role: 'student'});
 
 		res.send({status: 'ok', message: 'Student success created'});
 
