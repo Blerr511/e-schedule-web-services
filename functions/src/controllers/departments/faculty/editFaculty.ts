@@ -1,10 +1,10 @@
-import * as admin from 'firebase-admin';
-
 import {RequestHandler} from 'express';
-import {DefaultResponse, IFaculty, IFacultyIdentifier, IFacultyPayload, ParamsDictionary} from '@types';
+import {DefaultResponse, ParamsDictionary} from '@types';
 import {withRoles} from '@middlewares/role.middleware';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {Database} from '@helpers/DatabaseController';
+import {IFaculty, IFacultyIdentifier, IFacultyPayload} from '@helpers/DatabaseController/faculty';
 
 export type EditFacultyParams = ParamsDictionary<IFacultyIdentifier>;
 
@@ -22,19 +22,11 @@ const handleEditFaculty: RequestHandler<EditFacultyParams, EditFacultiesResponse
 
 		const {name} = req.body;
 
-		const db = admin.database();
+		const db = new Database();
 
-		const $faculties = db.ref('faculties');
+		const data = await db.faculty.updateById(id, {name});
 
-		const faculty = {
-			name
-		};
-
-		await $faculties.update({
-			[id]: faculty
-		});
-
-		res.send({status: 'ok', message: 'Faculty success updated', data: {id, name}});
+		res.send({status: 'ok', message: 'Faculty success updated', data});
 		next();
 	} catch (error) {
 		next(error);

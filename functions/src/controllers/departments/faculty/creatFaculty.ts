@@ -1,11 +1,9 @@
-import * as admin from 'firebase-admin';
-import * as uniqid from 'uniqid';
-
 import {RequestHandler} from 'express';
 import {DefaultResponse, IFaculty, IFacultyPayload} from '@types';
 import {withRoles} from '@middlewares/role.middleware';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {Database} from '@helpers/DatabaseController';
 
 export type CreateFacultiesResponse = DefaultResponse<IFaculty>;
 
@@ -19,20 +17,9 @@ const handleCreateFaculty: RequestHandler<never, CreateFacultiesResponse, Create
 	try {
 		const {name} = req.body;
 
-		const db = admin.database();
+		const db = new Database();
 
-		const $faculties = db.ref('faculties');
-
-		const id = uniqid(`faculty-${name}-`);
-
-		const faculty = {
-			name,
-			id
-		};
-
-		await $faculties.update({
-			[id]: faculty
-		});
+		const faculty = await db.faculty.create({name});
 
 		res.send({status: 'ok', message: 'Faculty success created', data: faculty});
 	} catch (error) {

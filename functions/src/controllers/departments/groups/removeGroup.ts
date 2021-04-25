@@ -1,28 +1,21 @@
-import * as admin from 'firebase-admin';
-
-import {DefaultResponse, IFacultyIdentifier, ParamsDictionary} from '@types';
+import {DefaultResponse, ParamsDictionary} from '@types';
 import {RequestHandler} from 'express';
-import {HttpError} from '@errors/HttpError';
 import {param} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {IGroupIdentifier} from '@helpers/DatabaseController/groups';
+import {Database} from '@helpers/DatabaseController';
 
 export type RemoveGroupResponse = DefaultResponse;
 
-export type RemoveGroupParams = ParamsDictionary<IFacultyIdentifier & {groupId: string}>;
+export type RemoveGroupParams = ParamsDictionary<IGroupIdentifier>;
 
 const handleRemoveGroup: RequestHandler<RemoveGroupParams, RemoveGroupResponse> = async (req, res, next) => {
 	try {
-		const {id, groupId} = req.params;
+		const {id} = req.params;
 
-		const db = admin.database();
+		const db = new Database();
 
-		const $group = db.ref(`faculties/${id}/groups/${groupId}`);
-
-		const groups = await $group.get();
-
-		if (!groups.exists()) throw new HttpError('not-found', `Group with id ${id} doesn't found`);
-
-		await $group.remove();
+		await db.groups.removeById(id);
 
 		res.send({status: 'ok', message: 'Group success removed'});
 

@@ -1,25 +1,17 @@
-import * as admin from 'firebase-admin';
-
 import {RequestHandler} from 'express';
-import {DefaultResponse, IFaculty} from '@types';
+import {DefaultResponse} from '@types';
+import {Database} from '@helpers/DatabaseController';
+import {IFaculty} from '@helpers/DatabaseController/faculty';
 
 export type GetFacultiesResponse = DefaultResponse<IFaculty[]>;
 
 const handleGetFaculties: RequestHandler<never, GetFacultiesResponse> = async (req, res, next) => {
 	try {
-		const db = admin.database();
+		const db = new Database();
 
-		const $faculties = db.ref('faculties');
+		const faculties = await db.faculty.find();
 
-		const faculties = await $faculties.get();
-
-		const data: IFaculty[] = [];
-
-		faculties.forEach(f => {
-			if (f) data.push(f.toJSON() as IFaculty);
-		});
-
-		res.send({status: 'ok', message: 'Success', data});
+		res.send({status: 'ok', message: 'Success', data: faculties});
 		next();
 	} catch (error) {
 		next(error);

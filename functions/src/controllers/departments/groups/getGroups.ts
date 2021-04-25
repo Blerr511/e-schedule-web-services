@@ -1,39 +1,29 @@
-import * as admin from 'firebase-admin';
-
-import {DefaultResponse, IFacultyIdentifier, IGroup, ParamsDictionary} from '@types';
+import {DefaultResponse} from '@types';
 import {RequestHandler} from 'express';
-import {param} from 'express-validator';
-import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {IGroup, IGroupIdentifier} from '@helpers/DatabaseController/groups';
+import {Database} from '@helpers/DatabaseController';
 
-export type GetGroupResponse = DefaultResponse<IGroup[]>;
+export type GetGroupResponse = DefaultResponse<IGroup | IGroup[]>;
 
-export type GetGroupParams = ParamsDictionary<IFacultyIdentifier>;
+export type GetGroupQuery = Partial<IGroupIdentifier & {facultyId?: string}>;
 
-const handleGetGroups: RequestHandler<GetGroupParams, GetGroupResponse> = async (req, res, next) => {
+const handleGetGroups: RequestHandler<void, GetGroupResponse, void, GetGroupQuery> = async (
+	req,
+	res,
+	next
+) => {
 	try {
-		const {id} = req.params;
+		const {id, facultyId} = req.query;
+		const db = new Database();
+		const groups = id
+			? await db.groups.findById(id)
+			: await db.groups.find(g => !facultyId || g.facultyId === facultyId);
 
-		const db = admin.database();
-
-		const $groups = db.ref(`faculties/${id}/groups`);
-
-		const groups = await $groups.get();
-
-		const data: IGroup[] = [];
-
-		groups.forEach(g => {
-			data.push(g.toJSON() as IGroup);
-		});
-
-		res.send({status: 'ok', message: 'Success', data});
+		res.send({status: 'ok', message: 'Success', data: groups});
 		next();
 	} catch (error) {
 		next(error);
 	}
 };
 
-export const getGroups = [
-	param('id').isString().withMessage('Faculty id not specified'),
-	validationResultMiddleware,
-	handleGetGroups
-];
+export const getGroups = [handleGetGroups];

@@ -1,11 +1,10 @@
-import * as admin from 'firebase-admin';
-
 import {RequestHandler} from 'express';
-import {DefaultResponse, IFacultyIdentifier, ParamsDictionary} from '@types';
+import {DefaultResponse, ParamsDictionary} from '@types';
 import {withRoles} from '@middlewares/role.middleware';
-import {HttpError} from '@errors/HttpError';
 import {param} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {Database} from '@helpers/DatabaseController';
+import {IFacultyIdentifier} from '@helpers/DatabaseController/faculty';
 
 export type RemoveFacultiesResponse = DefaultResponse<void>;
 
@@ -19,14 +18,9 @@ const handleRemoveFaculty: RequestHandler<RemoveFacultyParams, RemoveFacultiesRe
 	try {
 		const {id} = req.params;
 
-		const db = admin.database();
+		const db = new Database();
 
-		const $faculty = db.ref(`faculties/${id}`);
-
-		const faculty = await $faculty.get();
-		if (!faculty.exists()) throw new HttpError('not-found', `Faculty with id ${id} , doesn't exists`);
-
-		await $faculty.remove();
+		await db.faculty.removeById(id);
 
 		res.send({status: 'ok', message: 'Faculty success updated'});
 	} catch (error) {

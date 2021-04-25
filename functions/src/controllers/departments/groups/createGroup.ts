@@ -1,46 +1,28 @@
-import * as admin from 'firebase-admin';
-import * as uniqid from 'uniqid';
-
-import {DefaultResponse, IFacultyIdentifier, IGroup, IGroupPayload, ParamsDictionary} from '@types';
+import {DefaultResponse} from '@types';
 import {RequestHandler} from 'express';
-import {HttpError} from '@errors/HttpError';
 import {body, param} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
 import {withRoles} from '@middlewares/role.middleware';
+import {Database} from '@helpers/DatabaseController';
+import {IGroup, IGroupPayload} from '@helpers/DatabaseController/groups';
 
 export type CreateGroupBody = IGroupPayload;
 
 export type CreateGroupResponse = DefaultResponse<IGroup>;
 
-export type CreateGroupParams = ParamsDictionary<IFacultyIdentifier>;
-
-const handleCreateGroup: RequestHandler<CreateGroupParams, CreateGroupResponse, CreateGroupBody> = async (
+const handleCreateGroup: RequestHandler<void, CreateGroupResponse, CreateGroupBody> = async (
 	req,
 	res,
 	next
 ) => {
 	try {
-		const {id} = req.params;
-		const {name} = req.body;
+		const {name, facultyId} = req.body;
 
-		const db = admin.database();
+		const db = new Database();
 
-		const $faculty = db.ref(`faculties/${id}`);
+		await db.faculty.findById(facultyId);
 
-		const faculty = await $faculty.get();
-
-		if (!faculty.exists()) throw new HttpError('not-found', `Faculty with id ${id} doesn't found`);
-
-		const groups = $faculty.child('groups');
-
-		const groupId = uniqid(`faculty(${id})-group(${name})`);
-
-		const group = {
-			id: groupId,
-			name
-		};
-
-		groups.update({[id]: group});
+		const group = await db.groups.create({facultyId, name});
 
 		res.send({status: 'ok', message: 'Group success created', data: group});
 		next();

@@ -8,7 +8,8 @@ export class Users implements DatabaseController<IUser> {
 	constructor(db: admin.database.Database) {
 		this.db = db;
 	}
-	public async create(uid: string, user: IUser): Promise<unknown> {
+	public async create(user: IUser): Promise<unknown> {
+		const uid = user.uid;
 		const $users = this.db.ref(`users/${uid}`);
 		if ((await $users.get()).exists())
 			throw new HttpError('already-exists', `User with id ${uid} already exists`);
@@ -25,16 +26,21 @@ export class Users implements DatabaseController<IUser> {
 		if (!user.exists()) throw new HttpError('not-found', `User with id ${uid} not found`);
 		return user.toJSON() as IUser;
 	}
-	public async find(resolver: (data: IUser) => boolean): Promise<IUser[]> {
+	public async find(resolver?: (data: IUser) => boolean): Promise<IUser[]> {
 		const $users = this.db.ref(`users`);
 		const users = await $users.get();
 		const res: IUser[] = [];
 
 		users.forEach(user => {
 			const json = user.toJSON() as IUser;
-			if (resolver(json)) res.push(json);
+			if (!resolver || resolver(json)) res.push(json);
 		});
 
 		return res;
+	}
+	public async removeById(uid: string): Promise<void> {
+		const $users = this.db.ref(`users/${uid}`);
+		if (!(await $users.get()).exists()) throw new HttpError('not-found', `User with id ${uid} not found`);
+		await $users.remove();
 	}
 }
