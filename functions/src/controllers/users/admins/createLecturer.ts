@@ -4,6 +4,7 @@ import {ROLES} from '@config/roles';
 import {RequestHandler} from 'express';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
+import {Database} from '@helpers/DatabaseController';
 
 export type CreateLecturerResponse = DefaultResponse;
 
@@ -27,14 +28,12 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 
 		const data = await admin.auth().getUser(uid);
 
-		const db = admin.database();
-		const $lecturers = db.ref('lecturers');
+		const db = new Database();
 
-		await $lecturers.update({
-			[uid]: {uid}
-		});
+		await db.users.create(uid, {uid, role: 'lecturer'});
 
 		res.send({status: 'ok', message: 'Lecturer success created', data});
+
 		next();
 	} catch (error) {
 		next(error);

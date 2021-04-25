@@ -1,9 +1,12 @@
+import {createStudent} from '@controllers/users/students';
 import authMiddleware from '@middlewares/auth.middleware';
 import {Router} from 'express';
 import {departmentsRoute} from './departaments';
 import {usersRouter} from './users';
 
 const mainRouter = Router();
+
+mainRouter.put('/users/student', createStudent);
 
 mainRouter.use(authMiddleware);
 

@@ -2,26 +2,17 @@ import * as admin from 'firebase-admin';
 import {DefaultResponse} from '@types';
 import {RequestHandler} from 'express';
 import {UserRecord} from 'firebase-functions/lib/providers/auth';
-import {logger} from 'firebase-functions';
+import {Database} from '@helpers/DatabaseController';
 
 export type GetLecturerListResponse = DefaultResponse<UserRecord[]>;
 
 const handleGetLecturersList: RequestHandler<never, GetLecturerListResponse> = async (req, res, next) => {
 	try {
-		const db = admin.database();
-		const $lecturers = db.ref('lecturers');
+		const db = new Database();
 
-		const lecturers = await $lecturers.get();
+		const lecturers = await db.users.find(user => user.role === 'lecturer');
 
-		logger.info(lecturers.toJSON());
-
-		const ids: Array<{uid: string}> = [];
-
-		lecturers.forEach(lect => {
-			ids.push(lect.toJSON() as {uid: string});
-		});
-
-		const data: UserRecord[] = await Promise.all(ids.map(({uid}) => admin.auth().getUser(uid)));
+		const data = await Promise.all(lecturers.map(el => admin.auth().getUser(el.uid)));
 
 		res.send({status: 'ok', message: 'Success', data});
 
