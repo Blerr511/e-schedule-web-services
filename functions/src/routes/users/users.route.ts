@@ -8,4 +8,4 @@ export const usersRouter = Router();
 usersRouter.use('/admin', adminsRoute);
 usersRouter.use('/student', studentsRoute);
 
-usersRoute.use(usersRoute);
+usersRouter.use(usersRoute);
