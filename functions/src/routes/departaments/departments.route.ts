@@ -4,5 +4,5 @@ import {groupsRoute} from './groups';
 
 export const departmentsRoute = Router();
 
-departmentsRoute.use('groups', groupsRoute);
-departmentsRoute.use('faculties', facultyRote);
+departmentsRoute.use('/groups', groupsRoute);
+departmentsRoute.use('/faculties', facultyRote);
