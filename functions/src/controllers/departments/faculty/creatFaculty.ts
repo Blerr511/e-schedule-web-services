@@ -1,9 +1,10 @@
 import {RequestHandler} from 'express';
-import {DefaultResponse, IFaculty, IFacultyPayload} from '@types';
+import {DefaultResponse} from '@types';
 import {withRoles} from '@middlewares/role.middleware';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
 import {Database} from '@helpers/DatabaseController';
+import {IFaculty, IFacultyPayload} from '@helpers/DatabaseController/faculty';
 
 export type CreateFacultiesResponse = DefaultResponse<IFaculty>;
 

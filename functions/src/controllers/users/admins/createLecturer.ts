@@ -30,7 +30,7 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 
 		const db = new Database();
 
-		await db.users.create(uid, {uid, role: 'lecturer'});
+		await db.users.create({uid, role: 'lecturer'});
 
 		res.send({status: 'ok', message: 'Lecturer success created', data});
 
