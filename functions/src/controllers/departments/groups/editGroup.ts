@@ -10,7 +10,7 @@ export type EditGroupBody = IGroupPayload;
 
 export type EditGroupResponse = DefaultResponse<IGroup>;
 
-export type EditGroupParams = ParamsDictionary<{groupId: string}>;
+export type EditGroupParams = ParamsDictionary<{id: string}>;
 
 const handleEditGroup: RequestHandler<EditGroupParams, EditGroupResponse, EditGroupBody> = async (
 	req,
@@ -18,12 +18,12 @@ const handleEditGroup: RequestHandler<EditGroupParams, EditGroupResponse, EditGr
 	next
 ) => {
 	try {
-		const {groupId} = req.params;
+		const {id} = req.params;
 		const {name} = req.body;
 
 		const db = new Database();
 
-		const group = await db.groups.updateById(groupId, {name});
+		const group = await db.groups.updateById(id, {name});
 
 		res.send({status: 'ok', message: 'Group success created', data: group});
 		next();
@@ -35,7 +35,7 @@ const handleEditGroup: RequestHandler<EditGroupParams, EditGroupResponse, EditGr
 export const editGroup = [
 	withRoles('admin'),
 	body('name').isString().withMessage('Group name is required'),
-	param('groupId').isString().withMessage('Group id not specified'),
+	param('id').isString().withMessage('Group id not specified'),
 	validationResultMiddleware,
 	handleEditGroup
 ];

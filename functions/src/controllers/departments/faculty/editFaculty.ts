@@ -1,7 +1,7 @@
 import {RequestHandler} from 'express';
 import {DefaultResponse, ParamsDictionary} from '@types';
 import {withRoles} from '@middlewares/role.middleware';
-import {body} from 'express-validator';
+import {body, param} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
 import {Database} from '@helpers/DatabaseController';
 import {IFaculty, IFacultyIdentifier, IFacultyPayload} from '@helpers/DatabaseController/faculty';
@@ -35,7 +35,7 @@ const handleEditFaculty: RequestHandler<EditFacultyParams, EditFacultiesResponse
 
 export const editFaculty = [
 	withRoles('admin'),
-	body('id').isString().withMessage('Id is required'),
+	param('id').isString().withMessage('Id is required'),
 	body('name').isString().withMessage('Faculty name is required'),
 	validationResultMiddleware,
 	handleEditFaculty

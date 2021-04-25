@@ -4,6 +4,7 @@ import {param} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
 import {IGroupIdentifier} from '@helpers/DatabaseController/groups';
 import {Database} from '@helpers/DatabaseController';
+import {withRoles} from '@middlewares/role.middleware';
 
 export type RemoveGroupResponse = DefaultResponse;
 
@@ -26,8 +27,8 @@ const handleRemoveGroup: RequestHandler<RemoveGroupParams, RemoveGroupResponse> 
 };
 
 export const removeGroup = [
-	param('id').isString().withMessage('Faculty id not specified'),
-	param('groupId').isString().withMessage('Group id not specified'),
+	withRoles('admin'),
+	param('id').isString().withMessage('Group id not specified'),
 	validationResultMiddleware,
 	handleRemoveGroup
 ];

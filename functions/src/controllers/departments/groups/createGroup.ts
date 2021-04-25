@@ -1,6 +1,6 @@
 import {DefaultResponse} from '@types';
 import {RequestHandler} from 'express';
-import {body, param} from 'express-validator';
+import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
 import {withRoles} from '@middlewares/role.middleware';
 import {Database} from '@helpers/DatabaseController';
@@ -10,7 +10,7 @@ export type CreateGroupBody = IGroupPayload;
 
 export type CreateGroupResponse = DefaultResponse<IGroup>;
 
-const handleCreateGroup: RequestHandler<void, CreateGroupResponse, CreateGroupBody> = async (
+const handleCreateGroup: RequestHandler<unknown, CreateGroupResponse, CreateGroupBody> = async (
 	req,
 	res,
 	next
@@ -34,7 +34,7 @@ const handleCreateGroup: RequestHandler<void, CreateGroupResponse, CreateGroupBo
 export const createGroup = [
 	withRoles('admin'),
 	body('name').isString().withMessage('Group name is required'),
-	param('id').isString().withMessage('Faculty id not specified'),
+	body('facultyId').isString().withMessage('Faculty id not specified'),
 	validationResultMiddleware,
 	handleCreateGroup
 ];

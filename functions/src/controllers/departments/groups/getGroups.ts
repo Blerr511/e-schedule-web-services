@@ -1,19 +1,22 @@
-import {DefaultResponse} from '@types';
+import {DefaultResponse, ParamsDictionary} from '@types';
 import {RequestHandler} from 'express';
 import {IGroup, IGroupIdentifier} from '@helpers/DatabaseController/groups';
 import {Database} from '@helpers/DatabaseController';
 
 export type GetGroupResponse = DefaultResponse<IGroup | IGroup[]>;
 
-export type GetGroupQuery = Partial<IGroupIdentifier & {facultyId?: string}>;
+export type GetGroupQuery = {facultyId?: string};
 
-const handleGetGroups: RequestHandler<void, GetGroupResponse, void, GetGroupQuery> = async (
+export type GetGroupParams = ParamsDictionary<Partial<IGroupIdentifier>>;
+
+const handleGetGroups: RequestHandler<GetGroupParams, GetGroupResponse, void, GetGroupQuery> = async (
 	req,
 	res,
 	next
 ) => {
 	try {
-		const {id, facultyId} = req.query;
+		const {id} = req.params;
+		const {facultyId} = req.query;
 		const db = new Database();
 		const groups = id
 			? await db.groups.findById(id)
