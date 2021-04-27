@@ -4,11 +4,20 @@ import {DatabaseController, IDBElement} from '@helpers/DatabaseController';
 
 export class Relation<M extends IDBElement = IDBElement, R extends IDBElement = IDBElement> {
 	private db = admin.database();
-	mainClass: DatabaseController<M, M>;
-	relationClass: DatabaseController<R, R>;
+	private _mainClass: DatabaseController<M, M>;
+
+	public get mainClass(): DatabaseController<M, M> {
+		return this._mainClass;
+	}
+
+	public set mainClass(value: DatabaseController<M, M>) {
+		this._mainClass = value;
+	}
+
+	private relationClass: DatabaseController<R, R>;
 	_ref: string;
 	constructor(mainClass: DatabaseController<M, M>, relationClass: DatabaseController<R, R>) {
-		this.mainClass = mainClass;
+		this._mainClass = mainClass;
 		this.relationClass = relationClass;
 		this._ref = `${mainClass._ref}->${relationClass._ref}`;
 	}
@@ -19,7 +28,8 @@ export class Relation<M extends IDBElement = IDBElement, R extends IDBElement = 
 	}
 	public async create(uid: string, uids: string[]): Promise<unknown> {
 		const $ref = this.getRef(uid);
-		return await $ref.set(uids);
+		const data = uids.reduce((acc, v) => ({...acc, [v]: v}), {});
+		return await $ref.set(data);
 	}
 	public async update(uid: string, uids: string[]): Promise<unknown> {
 		const $ref = this.getRef(uid);
@@ -28,7 +38,8 @@ export class Relation<M extends IDBElement = IDBElement, R extends IDBElement = 
 			throw new HttpError('not-found', `Ref wih id ${uid} not found.`, {
 				ref: {type: 'error', message: this._ref}
 			});
-		return await $ref.update(uids);
+		const data = uids.reduce((acc, v) => ({...acc, [v]: v}), {});
+		return await $ref.update(data);
 	}
 
 	public async get(uid: string): Promise<R[]> {
@@ -39,14 +50,36 @@ export class Relation<M extends IDBElement = IDBElement, R extends IDBElement = 
 				ref: {type: 'error', message: this._ref}
 			});
 
-		const data: Promise<R>[] = [];
+		const ids: string[] = [];
 
 		ref.forEach(id => {
 			const d = id.toJSON() as string;
-
-			data.push(this.relationClass.findById(d));
+			ids.push(d);
 		});
 
-		return Promise.all(data);
+		const response: R[] = [];
+
+		for (let i = 0; i < ids.length; i++) {
+			const id = ids[i];
+
+			try {
+				const result = await this.relationClass.findById(id);
+				response.push(result);
+			} catch (error) {
+				this.remove(uid, id).catch();
+			}
+		}
+
+		return response;
+	}
+
+	public async remove(uid: string, relUid: string): Promise<void> {
+		const $ref = this.getRef(uid, relUid);
+		const ref = await $ref.get();
+		if (!ref.exists())
+			throw new HttpError('not-found', `Ref wih id ${relUid} not found.`, {
+				ref: {type: 'error', message: this._ref, value: relUid}
+			});
+		await $ref.remove();
 	}
 }

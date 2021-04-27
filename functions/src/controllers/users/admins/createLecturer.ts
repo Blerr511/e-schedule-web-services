@@ -5,6 +5,7 @@ import {RequestHandler} from 'express';
 import {body} from 'express-validator';
 import {validationResultMiddleware} from '@middlewares/validationResult.middleware';
 import {Database} from '@helpers/DatabaseController';
+import {DBRelations} from '@helpers/DBRelations/DBRelations';
 
 export type CreateLecturerResponse = DefaultResponse;
 
@@ -31,6 +32,10 @@ const handleCreateLecturer: RequestHandler<never, CreateLecturerResponse, Create
 		const db = new Database();
 
 		await db.users.create({uid, role: 'lecturer'});
+
+		const rel = new DBRelations();
+
+		await rel.lecturerLessons.create(uid, []);
 
 		res.send({status: 'ok', message: 'Lecturer success created', data});
 

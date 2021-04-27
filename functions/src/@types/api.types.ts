@@ -1,6 +1,6 @@
 import {FunctionsErrorCode} from 'firebase-functions/lib/providers/https';
 
-export interface MetaItem<V = void> {
+export interface MetaItem<V = unknown> {
 	type: 'error' | 'warning' | 'info';
 	message: string;
 	value?: V;
