@@ -4,7 +4,7 @@ export interface IGroupPayload {
 }
 
 export interface IGroupIdentifier {
-	id: string;
+	uid: string;
 }
 
 export interface IGroup extends IGroupPayload, IGroupIdentifier {}

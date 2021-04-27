@@ -3,7 +3,7 @@ export interface IFacultyPayload {
 }
 
 export interface IFacultyIdentifier {
-	id: string;
+	uid: string;
 }
 
 export interface IFaculty extends IFacultyPayload, IFacultyIdentifier {}

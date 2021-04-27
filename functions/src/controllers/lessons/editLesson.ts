@@ -19,9 +19,9 @@ const handleEditLesson: RequestHandler<EditLessonParams, EditLessonRes, EditLess
 ) => {
 	try {
 		const {id} = req.params;
-		const {facultyId, name, lecturerId} = req.body;
+		const {facultyId, name} = req.body;
 		const db = new Database();
-		const data = await db.lesson.updateById(id, {facultyId, name, lecturerId});
+		const data = await db.lesson.updateById(id, {facultyId, name});
 
 		res.send({status: 'ok', message: 'Lesson success updated', data});
 

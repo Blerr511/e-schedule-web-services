@@ -4,7 +4,7 @@ export interface ILessonPayload {
 }
 
 export interface ILessonIdentifier {
-	id: string;
+	uid: string;
 }
 
 export interface ILesson extends ILessonPayload, ILessonIdentifier {}

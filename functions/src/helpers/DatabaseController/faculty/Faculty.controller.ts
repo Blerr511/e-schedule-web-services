@@ -4,23 +4,26 @@ import * as uniqid from 'uniqid';
 import {DatabaseController} from '../types';
 import {HttpError} from '@errors/HttpError';
 import {IFaculty, IFacultyPayload} from './types';
+import {Ref} from '../Ref';
 
-export class Faculty implements DatabaseController<IFacultyPayload, IFaculty> {
-	private db: admin.database.Database;
+export class Faculty extends Ref implements DatabaseController<IFacultyPayload, IFaculty> {
+	protected db: admin.database.Database;
+	_ref = 'faculty';
 	constructor(db: admin.database.Database) {
+		super();
 		this.db = db;
 	}
 
 	public async create(faculty: IFacultyPayload): Promise<IFaculty> {
 		const uid = uniqid('faculty-');
-		const f: IFaculty = {...faculty, id: uid};
-		const $faculty = this.db.ref(`faculty/${uid}`);
+		const f: IFaculty = {...faculty, uid};
+		const $faculty = this.getRef(uid);
 		$faculty.set(f);
 		return f;
 	}
 
 	public async findById(uid: string): Promise<IFaculty> {
-		const $faculty = this.db.ref(`faculty/${uid}`);
+		const $faculty = this.getRef(uid);
 		const faculty = await $faculty.get();
 		if (!faculty.exists()) throw new HttpError('not-found', `Faculty with id \`${uid}\` not found`);
 
@@ -28,7 +31,7 @@ export class Faculty implements DatabaseController<IFacultyPayload, IFaculty> {
 	}
 
 	public async find(resolver?: (data: IFaculty) => boolean): Promise<IFaculty[]> {
-		const $faculties = this.db.ref('faculty');
+		const $faculties = this.getRef();
 		const faculties = await $faculties.get();
 		const res: IFaculty[] = [];
 		faculties.forEach(f => {
@@ -40,7 +43,7 @@ export class Faculty implements DatabaseController<IFacultyPayload, IFaculty> {
 	}
 
 	public async updateById(uid: string, data: Partial<IFacultyPayload>): Promise<IFaculty> {
-		const $faculty = this.db.ref(`faculty/${uid}`);
+		const $faculty = this.getRef(uid);
 		const faculty = await $faculty.get();
 		if (!faculty.exists()) throw new HttpError('not-found', `Faculty with id \`${uid}\` not found`);
 		$faculty.update(data);
@@ -51,7 +54,7 @@ export class Faculty implements DatabaseController<IFacultyPayload, IFaculty> {
 	}
 
 	public async removeById(uid: string): Promise<void> {
-		const $faculty = this.db.ref(`faculty/${uid}`);
+		const $faculty = this.getRef(uid);
 		const faculty = await $faculty.get();
 		if (!faculty.exists()) throw new HttpError('not-found', `Faculty with id \`${uid}\` not found`);
 		await $faculty.remove();

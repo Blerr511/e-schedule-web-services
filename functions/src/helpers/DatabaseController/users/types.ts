@@ -1,6 +1,8 @@
 import {Role} from '@config/roles';
+import {IDBElement} from '../types';
 
-export interface IUser {
-	uid: string;
+export interface IUserPayload {
 	role: Role;
 }
+
+export interface IUser extends IDBElement, IUserPayload {}
