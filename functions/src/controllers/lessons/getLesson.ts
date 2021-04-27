@@ -9,7 +9,6 @@ export type GetLessonResponse = DefaultResponse<ILesson | ILesson[]>;
 
 export type GetLessonQuery = {
 	facultyId?: string;
-	lecturerId?: string;
 };
 
 const handleGetLesson: RequestHandler<GetLessonParams, GetLessonResponse, void, GetLessonQuery> = async (
@@ -19,16 +18,12 @@ const handleGetLesson: RequestHandler<GetLessonParams, GetLessonResponse, void, 
 ) => {
 	try {
 		const {id} = req.params;
-		const {facultyId, lecturerId} = req.query;
+		const {facultyId} = req.query;
 		const db = new Database();
 
 		const data = id
 			? await db.lesson.findById(id)
-			: await db.lesson.find(
-					l =>
-						(!facultyId || l.facultyId === facultyId) &&
-						(!lecturerId || l.lecturerId === lecturerId)
-			  );
+			: await db.lesson.find(l => !facultyId || l.facultyId === facultyId);
 
 		res.send({status: 'ok', message: 'ok', data});
 	} catch (error) {

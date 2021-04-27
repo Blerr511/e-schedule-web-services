@@ -1,6 +1,5 @@
 export interface ILessonPayload {
 	name: string;
-	lecturerId: string;
 	facultyId: string;
 }
 

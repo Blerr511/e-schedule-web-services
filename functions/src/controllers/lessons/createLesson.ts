@@ -1,4 +1,3 @@
-import {HttpError} from '@errors/HttpError';
 import {Database} from '@helpers/DatabaseController';
 import {ILesson, ILessonPayload} from '@helpers/DatabaseController/lesson';
 import {withRoles} from '@middlewares/role.middleware';
@@ -17,13 +16,12 @@ const handleCreateLesson: RequestHandler<unknown, CreateLessonResponse, CreateLe
 	next
 ) => {
 	try {
-		const {facultyId, lecturerId, name} = req.body;
+		const {facultyId, name} = req.body;
 		const db = new Database();
+
 		await db.faculty.findById(facultyId);
-		const user = await db.users.findById(lecturerId);
-		if (user.role !== 'lecturer')
-			throw new HttpError('not-found', `User \`${lecturerId}\` is not a lecturer`);
-		const lesson = await db.lesson.create({facultyId, lecturerId, name});
+
+		const lesson = await db.lesson.create({facultyId, name});
 
 		res.send({status: 'ok', message: 'Lesson success created', data: lesson});
 		next();
@@ -35,7 +33,6 @@ const handleCreateLesson: RequestHandler<unknown, CreateLessonResponse, CreateLe
 export const createLesson = [
 	withRoles('admin'),
 	body('facultyId').isString().withMessage('Faculty  id is required'),
-	body('lecturerId').isString().withMessage('Lecturer  id is required'),
 	body('name').isString().withMessage('Lesson name is required'),
 	validationResultMiddleware,
 	handleCreateLesson
