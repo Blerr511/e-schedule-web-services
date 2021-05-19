@@ -8,6 +8,7 @@
 		"strict": true,
 		"moduleResolution": "node",
 		"baseUrl": "src",
+		"resolveJsonModule": true,
 		"paths": {
 			"@routes/*": ["routes/*"],
 			"@controllers/*": ["controllers/*"],

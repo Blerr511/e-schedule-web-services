@@ -1,8 +1,8 @@
 import {Role} from '@config/roles';
-import {IDBElement} from '../types';
+import {DBItem} from '@helpers/DatabaseController/data.types';
 
 export interface IUserPayload {
 	role: Role;
 }
 
-export interface IUser extends IDBElement, IUserPayload {}
+export interface IUser extends DBItem, IUserPayload {}

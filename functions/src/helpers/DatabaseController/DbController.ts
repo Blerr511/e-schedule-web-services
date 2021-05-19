@@ -1,7 +1,6 @@
 import * as admin from 'firebase-admin';
 import {Users} from './users';
-import {Groups} from './groups';
-import {Faculty} from './faculty';
+import {ScheduleController} from './ScheduleController';
 import {Lesson} from './lesson';
 
 export class Database {
@@ -9,13 +8,10 @@ export class Database {
 	public get users(): Users {
 		return new Users(this.db);
 	}
-	public get groups(): Groups {
-		return new Groups(this.db);
-	}
-	public get faculty(): Faculty {
-		return new Faculty(this.db);
-	}
 	public get lesson(): Lesson {
 		return new Lesson(this.db);
+	}
+	public get schedule(): ScheduleController {
+		return new ScheduleController(this.db);
 	}
 }
